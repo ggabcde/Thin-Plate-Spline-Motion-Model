@@ -14,6 +14,7 @@ from modules.inpainting_network import InpaintingNetwork
 from modules.keypoint_detector import KPDetector
 from modules.dense_motion import DenseMotionNetwork
 from modules.avd_network import AVDNetwork
+import cv2
 
 if sys.version_info[0] < 3:
     raise Exception("You must use Python 3 or higher. Recommended version is Python 3.9")
@@ -175,5 +176,8 @@ if __name__ == "__main__":
     else:
         predictions = make_animation(source_image, driving_video, inpainting, kp_detector, dense_motion_network, avd_network, device = device, mode = opt.mode)
     
+    for i in range(len(predictions)):
+        cv2.imwrite(f'farmes/{i:06d}.png', img_as_ubyte(predictions[i][:,:,::-1]))
+        
     imageio.mimsave(opt.result_video, [img_as_ubyte(frame) for frame in predictions], fps=fps)
 
